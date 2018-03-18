@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="author" content="A.I.">
+<meta name="description" content="正常来讲我本来不想写一篇 “Yet another Shadowsocks installation guide&#34;， 不过前几天升级路由发现又得编译一次然后之前的工具又不见了的时候，又得到 Google “翻箱倒柜”找编译步骤，不如记下来顺便发一下吧。
+编译环境 到 Openwrt 找到路由器对应的 SDK 下载条目，我路由器是 WNDR4300，版本是 lede 17.01.4，SDK 名字是 `lede-sdk-17.01.4-ar71xx-nand_gcc-5.4.0_musl-1.1.16.Linux-x86_64.tar.xz` 之所以先看名字是想确定 gcc 的版本，据经验来看，使用其他版本的 gcc 编译会很惨 （此处省略200字抱怨）。
+由于这时候还没有翻墙，所以编译最好在一个墙外的 VPS 上搞定。 （安装 docker 这种步骤就先跳过了）。
+docker run -it --name lede gcc:5.4 bash cd /usr/src curl $SDK_URL -O tar xvf $SDK_FILENAME mv $SDK_DIR lede-sdk cd lede-sdk  编译 这两位 openwrt-shadowsocks & luci-app-shadowsocks
+git clone https://github.com/shadowsocks/openwrt-feeds.git package/feeds git clone https://github.com/shadowsocks/openwrt-shadowsocks.git package/shadowsocks-libev git clone https://github.com/shadowsocks/luci-app-shadowsocks.git package/luci-app-shadowsocks pushd package/luci-app-shadowsocks/tools/po2lmo make &amp;&amp; make install popd make menuconfig make package/shadowsocks-libev/compile V=99 make package/luci-app-shadowsocks/compile V=99  打包 mkdir ipks # 有些是不需要的，不过懒得花时间去排除了 cp bin/packages/mips_24kc/base/*.">
+
+<meta property="og:title" content="Shadowsocks Openwrt Setup" />
+<meta property="og:description" content="正常来讲我本来不想写一篇 “Yet another Shadowsocks installation guide&#34;， 不过前几天升级路由发现又得编译一次然后之前的工具又不见了的时候，又得到 Google “翻箱倒柜”找编译步骤，不如记下来顺便发一下吧。
+编译环境 到 Openwrt 找到路由器对应的 SDK 下载条目，我路由器是 WNDR4300，版本是 lede 17.01.4，SDK 名字是 `lede-sdk-17.01.4-ar71xx-nand_gcc-5.4.0_musl-1.1.16.Linux-x86_64.tar.xz` 之所以先看名字是想确定 gcc 的版本，据经验来看，使用其他版本的 gcc 编译会很惨 （此处省略200字抱怨）。
+由于这时候还没有翻墙，所以编译最好在一个墙外的 VPS 上搞定。 （安装 docker 这种步骤就先跳过了）。
+docker run -it --name lede gcc:5.4 bash cd /usr/src curl $SDK_URL -O tar xvf $SDK_FILENAME mv $SDK_DIR lede-sdk cd lede-sdk  编译 这两位 openwrt-shadowsocks & luci-app-shadowsocks
+git clone https://github.com/shadowsocks/openwrt-feeds.git package/feeds git clone https://github.com/shadowsocks/openwrt-shadowsocks.git package/shadowsocks-libev git clone https://github.com/shadowsocks/luci-app-shadowsocks.git package/luci-app-shadowsocks pushd package/luci-app-shadowsocks/tools/po2lmo make &amp;&amp; make install popd make menuconfig make package/shadowsocks-libev/compile V=99 make package/luci-app-shadowsocks/compile V=99  打包 mkdir ipks # 有些是不需要的，不过懒得花时间去排除了 cp bin/packages/mips_24kc/base/*." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://merrick.luois.me/shadowsocks-openwrt-setup/" />
+
+
+
+<meta property="article:published_time" content="2018-03-14T00:07:10&#43;08:00"/>
+
+<meta property="article:modified_time" content="2018-03-14T00:07:10&#43;08:00"/>
+
+
+
+
+
+
+
+
+
+
+
+
+<title>
+
+
+     Shadowsocks Openwrt Setup 
+
+</title>
+<link rel="canonical" href="https://merrick.luois.me/shadowsocks-openwrt-setup/">
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Ubuntu+Mono:400,400i,700,700i|Raleway:500">
+
+
+
+    
+    <link rel="stylesheet" href="https://merrick.luois.me/css/reset.css?t=2018-03-18%2012%3a12%3a57.20371353%20%2b0800%20HKT%20m%3d%2b0.043218456">
+    <link rel="stylesheet" href="https://merrick.luois.me/css/pygments.css?t=2018-03-18%2012%3a12%3a57.20371353%20%2b0800%20HKT%20m%3d%2b0.043218456">
+    <link rel="stylesheet" href="https://merrick.luois.me/css/main.css?t=2018-03-18%2012%3a12%3a57.20371353%20%2b0800%20HKT%20m%3d%2b0.043218456">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="https://merrick.luois.me/img/favicon.ico"
+
+>
+
+
+
+
+
+
+
+
+</head>
+
+
+<body lang="en">
+
+<section class="header">
+    <div class="container">
+        <div class="content">
+            
+            <a href="https://merrick.luois.me/"><img class="avatar" src="https://gravatar.com/avatar/5c57af8fc8d824c89109b8f5d362654d?s=50" rcset="https://gravatar.com/avatar/5c57af8fc8d824c89109b8f5d362654d?s=100 2x, https://gravatar.com/avatar/5c57af8fc8d824c89109b8f5d362654d?s=150 3x, https://gravatar.com/avatar/5c57af8fc8d824c89109b8f5d362654d?s=200 4x"></a>
+            
+            <a href="https://merrick.luois.me/"><div class="name">A.I.</div></a>
+            
+            <nav>
+                <ul>
+                    
+                        <li class="nav-blog"><a href="https://merrick.luois.me/blog/"><span>Blog</span></a></li>
+                    
+                        <li class="nav-about"><a href="https://merrick.luois.me/about/"><span>About</span></a></li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<section class="icons">
+    <div class="container">
+        <div class="content">
+        
+            <a href="//github.com/merrickluo" target="_blank" rel="noopener"><img class="icon" src="https://merrick.luois.me/img/github.svg" alt="github" /></a>
+        
+
+        
+            <a href="//twitter.com/merrickluo" target="_blank" rel="noopener"><img class="icon" src="https://merrick.luois.me/img/twitter.svg" alt="twitter" /></a>
+        
+
+	
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+        </div>
+    </div>
+</section>
+
+
+<section class="main post non-narrow zero-top-spacing">
+    <div class="container">
+        <div class="content">
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
+
+    Shadowsocks Openwrt Setup
+
+</div>
+
+                    <div class="initials"><a href="https://merrick.luois.me"></a></div>
+                </div>
+                <div class="meta">
+                    
+                    <div class="date" title='Wed Mar 14 2018 00:07:10 HKT'>Mar 14, 2018</div>
+                    
+                    
+		    <div class="reading-time"><div class="middot"></div>2 minutes read</div>
+                    
+                </div>
+            </div>
+            <div class="markdown">
+                <p>正常来讲我本来不想写一篇 “Yet another Shadowsocks installation guide"，
+不过前几天升级路由发现又得编译一次然后之前的工具又不见了的时候，又得到 Google
+“翻箱倒柜”找编译步骤，不如记下来顺便发一下吧。</p>
+
+<h2 id="编译环境">编译环境</h2>
+
+<p>到 <a href="https://downloads.openwrt.org/" title="Openwrt">Openwrt</a> 找到路由器对应的 SDK 下载条目，我路由器是 WNDR4300，版本是 lede
+17.01.4，SDK 名字是
+`lede-sdk-17.01.4-ar71xx-nand_gcc-5.4.0_musl-1.1.16.Linux-x86_64.tar.xz`
+之所以先看名字是想确定 gcc 的版本，据经验来看，使用其他版本的 gcc 编译会很惨
+（此处省略200字抱怨）。</p>
+
+<p>由于这时候还没有翻墙，所以编译最好在一个墙外的 VPS 上搞定。
+（安装 docker 这种步骤就先跳过了）。</p>
+
+<pre><code class="language-shell">docker run -it --name lede gcc:5.4 bash
+
+cd /usr/src
+curl $SDK_URL -O
+tar xvf $SDK_FILENAME
+mv $SDK_DIR lede-sdk
+cd lede-sdk
+</code></pre>
+
+<h2 id="编译">编译</h2>
+
+<p>这两位 <a href="https://github.com/shadowsocks/openwrt-shadowsocks" title="openwrt-shadowsocks">openwrt-shadowsocks</a> & <a href="https://github.com/shadowsocks/luci-app-shadowsocks" title="luci-app-shadowsocks">luci-app-shadowsocks</a></p>
+
+<pre><code class="language-shell">git clone https://github.com/shadowsocks/openwrt-feeds.git package/feeds
+git clone https://github.com/shadowsocks/openwrt-shadowsocks.git package/shadowsocks-libev
+
+
+git clone https://github.com/shadowsocks/luci-app-shadowsocks.git package/luci-app-shadowsocks
+
+pushd package/luci-app-shadowsocks/tools/po2lmo
+make &amp;&amp; make install
+popd
+
+make menuconfig
+
+make package/shadowsocks-libev/compile V=99
+make package/luci-app-shadowsocks/compile V=99
+</code></pre>
+
+<h2 id="打包">打包</h2>
+
+<pre><code class="language-shell">mkdir ipks
+
+# 有些是不需要的，不过懒得花时间去排除了
+cp bin/packages/mips_24kc/base/*.ipk ipks/
+cp bin/packages/mips_24kc/packages/*.ipk ipks/
+cp bin/targets/ar71xx/nand/pacakges/*.ipk ipks/
+
+tar cvf notimportant.tar ipks
+
+exit
+
+docker cp lede:/usr/src/lede-sdk/notimportant.tar ./
+</code></pre>
+
+<h2 id="安装">安装</h2>
+
+<pre><code class="language-shell">scp notimportant.tar root@lede:/tmp/
+
+ssh root@lede
+cd /tmp
+tar xvf notimportant.tar
+cd ipks
+opkg install *.ipk
+
+opkg update
+opkg install iptables-mod-tproxy
+</code></pre>
+
+<h2 id="dns-和-chnroutes">DNS 和 chnroutes</h2>
+
+<p>这里用的是 <a href="https://github.com/felixonmars/dnsmasq-china-list" title="dnsmasq-china-list">dnsmasq-china-list</a></p>
+
+<pre><code class="language-shell">git clone https://github.com/felixonmars/dnsmasq-china-list.git
+cd dnsmasq-china-list
+scp *.conf root@lede:~/
+
+ssh root@lede
+mkdir /etc/dnsmasq.conf.d
+mv *.conf /etc/dnsmasq.conf.d/
+
+# opkg install vim
+vim /etc/dnsmasq.conf
+# insert conf-dir=/etc/dnsmasq.conf.d/
+
+opkg remove dnsmasq &amp;&amp; opkg install dnsmasq-full
+/etc/init.d/dnsmasq restart
+</code></pre>
+
+<p>然后再配置一个没有污染的 DNS，最好在 luci 里面，方便修改。</p>
+
+<p>最后是 <a href="https://github.com/shadowsocks/luci-app-shadowsocks/wiki/use-crontab-to-update-the-ignore.list" title="chnroutes">chnroutes</a></p>
+
+<pre><code class="language-shell">vim /usr/bin/update-ignore-list
+
+# insert
+#!/bin/sh
+
+set -e -o pipefail
+
+wget -O- 'http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest' | \
+    awk -F\| '/CN\|ipv4/ { printf(&quot;%s/%d\n&quot;, $4, 32-log($5)/log(2)) }' &gt; \
+    /tmp/ignore.list
+
+mv /tmp/ignore.list /etc/
+
+if pidof ss-redir&gt;/dev/null; then
+    /etc/init.d/shadowsocks rules
+fi
+
+# end
+
+chmod +x /usr/bin/update-ignore-list
+
+update-ignore-list
+
+crontab -e
+30 4 * * 0 /usr/bin/update-ignore-list &gt;&gt; /var/log/update_ignore_list.log
+</code></pre>
+
+<p>Note to self： 下次最好升级之前先弄好。</p>
+
+                <br>
+		<p class="back-to-posts"><a href="https://merrick.luois.me/blog/">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
+                
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
+  
+
+  <script type="text/javascript">
+    hljs.initHighlightingOnLoad();
+  </script>
+
+
+
+
+
+</body>
+</html>
+
